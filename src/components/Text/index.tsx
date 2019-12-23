@@ -15,7 +15,7 @@ const useTextStyles = makeStyles(({ spacing }: Theme): Record<"root", CreateCSSP
     fontWeight: 400,
     fontSize: '0.725rem',
     lineHeight: 1.85,
-    marginRight: ({ last }) => (last ? 0 : spacing(3)),
+    marginRight: ({ last }) => (last ? 0 : spacing(1)),
     textDecoration: 'none',
     whiteSpace: 'nowrap',
     '&:hover': { textDecoration: ({ to }) => (to ? 'underline' : 'none') }
@@ -24,7 +24,7 @@ const useTextStyles = makeStyles(({ spacing }: Theme): Record<"root", CreateCSSP
 
 const Text = ({ children, to, last }: TextProps) => {
   const classes = useTextStyles({ to, last });
-  const component = () => to ? <Link to={to} /> : null;
+  const component = (props) => to ? <Link to={to} {...props} /> : <span {...props} />;
 
   return (
     <MuiText
