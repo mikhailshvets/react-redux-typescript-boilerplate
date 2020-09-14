@@ -25,7 +25,6 @@ export interface FormProviderProps extends React.PropsWithChildren<any> {
 }
 
 const FormProvider = ({ children, onSubmit }: FormProviderProps) => {
-  /* :: (object, object) -> Promise<void> */
   const handleSignIn = async (formData, actions) => {
     try {
       onSubmit(formData);

@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { Form } from 'formik';
-import { ISignInPayload } from 'store/constants';
+import { SignInPayload } from 'store/constants';
 
 import FormProvider from './FormProvider';
 import { SubmitButton } from 'components/Buttons';
@@ -14,7 +14,7 @@ import { EmailField, PasswordField } from 'components/FormInputs';
 import useStyles from 'constants/styles';
 
 export interface SignInPageProps {
-  onSubmit: (payload: ISignInPayload) => void,
+  onSubmit: (payload: SignInPayload) => void,
 }
 
 function SignIn({ onSubmit }: SignInPageProps) {

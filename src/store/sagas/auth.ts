@@ -5,37 +5,26 @@ import {
   takeLatest,
   takeEvery,
   select,
-} from 'redux-saga/effects'
-import { replace } from 'connected-react-router'
+} from 'redux-saga/effects';
+import { replace } from 'connected-react-router';
 
-import * as api from './api'
-import * as actions from '../actions'
-import { ISignInAction, ISignUpAction, EAuthActionTypes } from "../constants/auth";
-import { IRootReducer } from "../reducers";
+import api from './api';
+import * as actions from '../actions';
+import {
+  SignInAction,
+  SignUpAction,
+  EAuthActionTypes,
+} from '../constants/auth';
+import { RootReducer } from '../reducers';
 
-const getToken = (state: IRootReducer) => state.auth.user.token;
+const getToken = (state: RootReducer) => state.auth.user.token;
 
-function* signIn({ payload } : ISignInAction) {
-  try {
-    yield put(actions.userSignIn({ email: payload.email, token: 'true' } ))
-    yield call(testAuth)
-  } catch (error) {
-    yield put(actions.signInRequestFailedAction())
-  }
-}
+function* setAccessTokenToHeader() {
+  const token = yield select(getToken);
 
-function* signUp({ payload } : ISignUpAction) {
-  try {
-    yield put(actions.userSignIn({ email: payload.email, token: 'true' } ))
-    yield call(testAuth)
-  } catch (error) {
-    yield put(actions.signUpRequestFailedAction())
-  }
-}
+  yield call(api.setAuthToken, token);
 
-function* signOut() {
-  yield put(actions.userSignOut())
-  yield put(replace('/protected'))
+  return token;
 }
 
 function* testAuth() {
@@ -44,19 +33,34 @@ function* testAuth() {
 
     if (accessToken) {
       yield put(actions.userSignIn({ token: accessToken }));
-      yield put(replace('/protected'))
+      yield put(replace('/protected'));
     }
   } catch (error) {
-    yield put(actions.testAuthRequestFailedAction())
+    yield put(actions.testAuthRequestFailedAction());
   }
 }
 
-function* setAccessTokenToHeader() {
-  const token = yield select(getToken)
+function* signIn({ payload }: SignInAction) {
+  try {
+    yield put(actions.userSignIn({ email: payload.email, token: 'true' }));
+    yield call(testAuth);
+  } catch (error) {
+    yield put(actions.signInRequestFailedAction());
+  }
+}
 
-  yield call(api.setAuthToken, token);
+function* signUp({ payload }: SignUpAction) {
+  try {
+    yield put(actions.userSignIn({ email: payload.email, token: 'true' }));
+    yield call(testAuth);
+  } catch (error) {
+    yield put(actions.signUpRequestFailedAction());
+  }
+}
 
-  return token
+function* signOut() {
+  yield put(actions.userSignOut());
+  yield put(replace('/protected'));
 }
 
 export default function* authSagas() {
@@ -64,6 +68,6 @@ export default function* authSagas() {
     yield takeLatest(EAuthActionTypes.SIGN_IN, signIn),
     yield takeLatest(EAuthActionTypes.SIGN_UP, signUp),
     yield takeLatest(EAuthActionTypes.SIGN_OUT, signOut),
-    yield takeEvery(EAuthActionTypes.TEST_AUTH, testAuth)
-  ])
+    yield takeEvery(EAuthActionTypes.TEST_AUTH, testAuth),
+  ]);
 }

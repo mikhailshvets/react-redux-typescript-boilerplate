@@ -1,132 +1,140 @@
 export const API_URL = '';
 
-let refreshToken: string = '';
-let accessToken: string = '';
-
-const getHeaders = (headers: Map<string,string>|{} = {}): Headers => {
-  const allHeaders = new Headers();
-  allHeaders.append('Accept', 'application/json');
-  allHeaders.append('Authorization', '');
-  allHeaders.append('Content-Type', 'application/json');
-  allHeaders.append('token', accessToken);
-  Object.entries(headers).forEach(([key,value]) => allHeaders.append(key,value));
-  // const allHeaders = {
-  //   Accept: 'application/json',
-  //   Authorization: 'obh
-  //   'Content-Type': 'application/json',
-  //   token: accessToken,
-  //   ...headers,
-  // };
-
-  if (accessToken) {
-    allHeaders.append('Authorization', accessToken);
-  }
-
-  return allHeaders;
-};
-
-interface IFetchAsyncParams {
-  headers?: Map<string,string>,
-  method: string,
-  body?: object,
+interface FetchAsyncParams {
+  headers?: Map<string, string>;
+  method: string;
+  body?: object;
 }
 
-
-interface IFetchParams {
-  headers: Headers,
-  method: string,
-  body?: string,
+interface FetchParams {
+  headers: Headers;
+  method: string;
+  body?: string;
 }
 
-const fetchAsync = async(url: string, { method = 'GET', body, headers } : IFetchAsyncParams) => {
-  // await response of fetch call
-  const params: IFetchParams = {
-    headers: new Headers(),
-    method: '',
+export class Api {
+  private refreshToken = '';
+  private accessToken = '';
+
+  private getHeaders = (
+    headers: Map<string, string> | object = {}
+  ): Headers => {
+    const allHeaders = new Headers();
+
+    allHeaders.append('Accept', 'application/json');
+    allHeaders.append('Authorization', '');
+    allHeaders.append('Content-Type', 'application/json');
+    allHeaders.append('token', this.accessToken);
+
+    Object.entries(headers).forEach(([key, value]) =>
+      allHeaders.append(key, value)
+    );
+
+    if (this.accessToken) {
+      allHeaders.append('Authorization', this.accessToken);
+    }
+
+    return allHeaders;
   };
 
-  params.headers = getHeaders(headers);
-  params.method = method;
+  private fetchAsync = async (
+    url: string,
+    { method = 'GET', body, headers }: FetchAsyncParams
+  ) => {
+    // await response of fetch call
+    const params: FetchParams = {
+      headers: new Headers(),
+      method: '',
+    };
 
-  if (body && (method !== 'GET' && method !== 'HEAD')) {
-    params.body = JSON.stringify(body);
-  }
+    params.headers = this.getHeaders(headers);
+    params.method = method;
 
-  let response = await fetch(url, params);
+    if (body && method !== 'GET' && method !== 'HEAD') {
+      params.body = JSON.stringify(body);
+    }
 
-  if (response && response.status === 403) {
-    params.headers.append('token',refreshToken);
-    response = await fetch(url, params);
-  }
+    let response = await fetch(url, params);
 
-  // only proceed once promise is resolved
-  const data = await response.json();
-  // only proceed once second promise is resolved
-  return data;
-};
+    if (response && response.status === 403) {
+      params.headers.append('token', this.refreshToken);
+      response = await fetch(url, params);
+    }
 
-export const setAuthToken = (token: string) => {
-  accessToken = token;
-};
+    const data = await response.json();
 
-export const resetAuthToken = () => {
-  accessToken = '';
-};
+    return data;
+  };
 
-export const setRefreshToken = (token: string) => {
-  refreshToken = token;
-};
+  private parseQuery = (query?: object) => {
+    let queryString = '';
 
-export const resetRefreshToken = () => {
-  refreshToken = '';
-};
+    if (query && typeof query === 'object') {
+      const entries = Object.entries(query);
 
-const parseQuery = (query?: object) => {
-  let queryString = '';
+      queryString += entries.reduce((acc, [key, val]) => {
+        return `${acc}&${encodeURI(key)}=${encodeURI(val)}`;
+      }, '?');
+    }
 
-  if (query && typeof query === 'object') {
-    const entries = Object.entries(query);
+    return queryString;
+  };
 
-    queryString += entries.reduce((acc, [key, val]) => {
-      return `${acc}&${encodeURI(key)}=${encodeURI(val)}`;
-    }, '?');
-  }
+  setAuthToken = (token: string) => {
+    this.accessToken = token;
+  };
 
-  return queryString;
-};
+  resetAuthToken = () => {
+    this.accessToken = '';
+  };
 
-export const get = async(endpoint: string, query?: object) => {
-  let url = `${API_URL}/${endpoint}`;
+  setRefreshToken = (token: string) => {
+    this.refreshToken = token;
+  };
 
-  url += parseQuery(query);
+  resetRefreshToken = () => {
+    this.refreshToken = '';
+  };
 
-  const data = await fetchAsync(url, { method: 'GET' });
+  get = async <T = any>(endpoint: string, query?: object) => {
+    let url = `${API_URL}/${endpoint}`;
+    url += this.parseQuery(query);
+    const response: T = await this.fetchAsync(url, { method: 'GET' });
 
-  return data;
-};
+    return response;
+  };
 
-export const post = async(endpoint: string, data?: object, query?: object) => {
-  let url = `${API_URL}/${endpoint}`;
-  url += parseQuery(query);
-  const res = await fetchAsync(url, { method: 'POST', body: data });
+  post = async <T = any>(endpoint: string, data?: object, query?: object) => {
+    let url = `${API_URL}/${endpoint}`;
+    url += this.parseQuery(query);
+    const response: T = await this.fetchAsync(url, {
+      method: 'POST',
+      body: data,
+    });
 
-  return res;
-};
+    return response;
+  };
 
-export const put = async(endpoint: string, data: object, query?: object) => {
-  let url = `${API_URL}/${endpoint}`;
-  url += parseQuery(query);
-  const res = await fetchAsync(url, { method: 'PUT', body: data });
+  put = async <T = any>(endpoint: string, data: object, query?: object) => {
+    let url = `${API_URL}/${endpoint}`;
+    url += this.parseQuery(query);
+    const response: T = await this.fetchAsync(url, {
+      method: 'PUT',
+      body: data,
+    });
 
-  return res;
-};
+    return response;
+  };
 
-export const deleteRequest = async(endpoint: string, query?: object) => {
-  let url = `${API_URL}/${endpoint}`;
+  delete = async <T = any>(endpoint: string, query?: object) => {
+    let url = `${API_URL}/${endpoint}`;
+    url += this.parseQuery(query);
+    const response: T = await this.fetchAsync(url, { method: 'DELETE' });
 
-  url += parseQuery(query);
+    return response;
+  };
+}
 
-  const res = await fetchAsync(url, { method: 'DELETE' });
+const api = new Api();
 
-  return res;
-};
+export default api;

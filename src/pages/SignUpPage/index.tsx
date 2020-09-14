@@ -2,10 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { signUpAction } from 'store/actions';
 import SignUpPage from './SignUpPage';
-import { ISignUpPayload } from 'store/constants';
+import { SignUpPayload } from 'store/constants';
 
 export interface SignUpProps {
-  signUp: (payload: ISignUpPayload) => void,
+  signUp: (payload: SignUpPayload) => void,
 }
 
 function SignUp({ signUp }: SignUpProps) {

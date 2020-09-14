@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { Form } from 'formik';
-import { ISignUpPayload } from 'store/constants';
+import { SignUpPayload } from 'store/constants';
 
 import FormProvider from './FormProvider';
 import { SubmitButton } from 'components/Buttons';
@@ -20,7 +20,7 @@ import {
 import useStyles from 'constants/styles';
 
 export interface SignUpPageProps {
-  onSubmit: (payload: ISignUpPayload) => void,
+  onSubmit: (payload: SignUpPayload) => void,
 }
 
 function SignUp({ onSubmit }: SignUpPageProps) {

@@ -1,3 +1,3 @@
-import window from 'global';
+const isMobile = () => !!window.navigator.userAgent.match(/Mobi/);
 
-export const isMobile = () => !!window.navigator.userAgent.match(/Mobi/);
+export default isMobile;

@@ -1,37 +1,36 @@
-import React, { useEffect, ReactElement } from 'react'
-import { Switch, Route } from 'react-router-dom'
-import { connect } from 'react-redux'
-import { testAuthAction, signOutAction } from 'store/actions'
-import { IUser } from 'store/reducers/auth'
+import React, { useEffect, ReactElement } from 'react';
+import { Switch, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { testAuthAction, signOutAction } from 'store/actions';
+import { User } from 'store/reducers/auth';
 
-import HomePage from 'pages/HomePage'
-import ProtectedPage from 'pages/ProtectedPage/Loadable'
-import SignInPage from 'pages/SignInPage/Loadable'
-import SignUpPage from 'pages/SignUpPage/Loadable'
-import NotFoundPage from 'pages/NotFoundPage/Loadable'
-import ProtectedRoute from 'components/ProtectedRoute'
-import Header from 'components/Header'
-import Footer from 'components/Footer'
-import Main from 'components/Main'
-import BaseStyles from 'components/BaseStyles/BaseStyles'
+import HomePage from 'pages/HomePage';
+import ProtectedPage from 'pages/ProtectedPage/Loadable';
+import SignInPage from 'pages/SignInPage/Loadable';
+import SignUpPage from 'pages/SignUpPage/Loadable';
+import NotFoundPage from 'pages/NotFoundPage/Loadable';
+import ProtectedRoute from 'components/ProtectedRoute';
+import Header from 'components/Header';
+import Footer from 'components/Footer';
+import Main from 'components/Main';
+import BaseStyles from 'components/BaseStyles/BaseStyles';
 
-import './App.css'
-import { IRootReducer } from "./store/reducers";
+import './App.css';
+import { RootReducer } from './store/reducers';
 
 interface AppProps {
-    testAuth: () => void,
-    signOut: () => void,
-    user: IUser,
+  testAuth: () => void;
+  signOut: () => void;
+  user: User;
 }
 
-function App({ testAuth, signOut, user } : AppProps): ReactElement {
+function App({ testAuth, signOut, user }: AppProps): ReactElement {
   useEffect(() => {
-    testAuth()
-  }, [ testAuth ]);
-
+    testAuth();
+  }, [testAuth]);
 
   return (
-    <React.Fragment>
+    <>
       <BaseStyles />
       <Header user={user} signOut={signOut} />
       <Main>
@@ -44,13 +43,13 @@ function App({ testAuth, signOut, user } : AppProps): ReactElement {
         </Switch>
       </Main>
       <Footer />
-    </React.Fragment>
-  )
+    </>
+  );
 }
 
 export default connect(
-  (store: IRootReducer) => ({
+  (store: RootReducer) => ({
     user: store.auth.user,
   }),
   { testAuth: testAuthAction, signOut: signOutAction }
-)(App)
+)(App);

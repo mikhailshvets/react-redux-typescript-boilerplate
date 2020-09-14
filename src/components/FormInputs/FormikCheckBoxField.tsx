@@ -7,7 +7,7 @@ import { isEmpty, get, isNil } from 'lodash'
 export interface FormikCheckBoxFieldProps extends FormControlLabelProps {
   name: string,
   label: string,
-  shouldSave?: (event: React.ChangeEvent<{}>, checked: boolean) => boolean,
+  shouldSave: (event: React.ChangeEvent<{}>, checked: boolean) => boolean,
 }
 
 export const getCheckBoxFieldProps = ({ shouldSave, ...props }: FormikCheckBoxFieldProps, formikFieldProps: FormControlLabelProps, formikForm: FormikProps<{}>) => {

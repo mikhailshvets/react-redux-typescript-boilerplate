@@ -16,12 +16,22 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "noEmit": true,
-    "jsx": "preserve",
+    "jsx": "react",
     "baseUrl": "src",
+    "sourceMap": true,
+    "noFallthroughCasesInSwitch": true,
     "isolatedModules": true,
+    "strictFunctionTypes": false,
+    "inlineSources": true,
+    "sourceRoot": "/",
+    "noImplicitReturns": false,
     "noImplicitAny": false
   },
   "include": [
     "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
   ]
 }

@@ -1,14 +1,15 @@
-import { combineReducers, Reducer } from 'redux'
-import { connectRouter, RouterState } from 'connected-react-router'
-import auth, { IAuth } from './auth'
+import { combineReducers, Reducer } from 'redux';
+import { connectRouter, RouterState } from 'connected-react-router';
+import { LocationState, History } from 'history';
+import auth, { Auth } from './auth';
 
-export interface IRootReducer {
-    auth: IAuth,
-    router: RouterState,
+export interface RootReducer {
+  auth: Auth;
+  router: RouterState;
 }
 
-export default (history: any) : Reducer<IRootReducer> =>
+export default (history: History<LocationState>): Reducer<RootReducer> =>
   combineReducers({
     auth,
-    router: connectRouter(history)
-  } as any);
+    router: connectRouter(history),
+  });

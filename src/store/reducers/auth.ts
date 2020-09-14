@@ -1,39 +1,39 @@
-import { EAuthActionTypes, IAuthBaseAction } from "../constants/auth";
+import { EAuthActionTypes, AuthBaseAction } from '../constants/auth';
 
-export interface IUser {
-    email: string,
-    token: string,
+export interface User {
+  email: string;
+  token: string;
 }
 
-export interface IAuth {
-    user: IUser,
+export interface Auth {
+  user: User;
 }
 
-const initialState: IAuth = {
-    user: {
-        email: '',
-        token: ''
-    }
+const initialState: Auth = {
+  user: {
+    email: '',
+    token: '',
+  },
 };
 
+const authReducer = (
+  state: Auth = initialState,
+  { type, payload }: AuthBaseAction
+): Auth => {
+  switch (type) {
+    case EAuthActionTypes.USER_SIGN_IN:
+      return {
+        ...state,
+        user: { ...state.user, ...payload },
+      };
+    case EAuthActionTypes.USER_SIGN_OUT:
+      return {
+        ...initialState,
+        user: { ...initialState.user },
+      };
+    default:
+      return state;
+  }
+};
 
-const authReducer = (state: IAuth = initialState, {type, payload}: IAuthBaseAction): IAuth => {
-    switch (type) {
-        case EAuthActionTypes.USER_SIGN_IN:
-            return {
-                ...state,
-                user: {...state.user, ...payload}
-            };
-        case EAuthActionTypes.USER_SIGN_OUT:
-            return {
-                ...initialState,
-                user: {...initialState.user}
-            };
-        default:
-            return state
-
-    }
-
-}
-
-export default authReducer
+export default authReducer;

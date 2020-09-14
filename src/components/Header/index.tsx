@@ -4,26 +4,26 @@ import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import LinkButton from 'components/Buttons/LinkButton';
 import { isLoggedIn } from 'utils/user';
-import { IUser } from 'store/reducers/auth';
+import { User } from 'store/reducers/auth';
 import { SIGN_IN, SIGN_UP, HOME, PROTECTED } from 'constants/routes';
 
 export const HEADER_HEIGHT = 64;
 
 export interface HeaderProps {
-  user: IUser,
-  signOut: () => void,
+  user: User;
+  signOut: () => void;
 }
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   menuButton: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   toolbar: {
-    justifyContent: 'space-between'
-  }
+    justifyContent: 'space-between',
+  },
 }));
 
 function Header({ user, signOut }: HeaderProps) {
@@ -54,6 +54,6 @@ function Header({ user, signOut }: HeaderProps) {
       </AppBar>
     </div>
   );
-};
+}
 
 export default Header;

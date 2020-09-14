@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, RouteComponentProps, RouteProps } from 'react-router-dom';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Text from '@material-ui/core/Typography';
 import ArrowBackIcon from '@material-ui/icons/KeyboardArrowLeft';
@@ -8,8 +8,7 @@ import { isLoggedIn } from 'utils/user';
 import LinkButton from 'components/Buttons/LinkButton';
 import { HOME, PROTECTED } from 'constants/routes';
 import window from 'global';
-import { IUser } from 'store/reducers/auth';
-import { History } from 'history';
+import { User } from 'store/reducers/auth';
 import { Theme } from '@material-ui/core';
 
 const GoToDashboardButton = () => (
@@ -26,7 +25,7 @@ const styles = () => ({
   transform: 'translate(-50%, -50%)'
 });
 
-const WrapperComponent = (props: any) => (<div {...props} />)
+const WrapperComponent = (props: any) => (<div {...props} />);
 const Wrapper = withStyles(createStyles(styles))(WrapperComponent);
 
 interface ErrorMessageProps {
@@ -54,7 +53,7 @@ const ErrorMessage = ({ timeToRetry, children }: ErrorMessageProps) => (
 export interface ErrorPageProps extends React.PropsWithChildren<RouteComponentProps> {
   children: React.ReactNode,
   retryDelayInSeconds?: number,
-  user?: IUser
+  user?: User
 };
 
 const ErrorPage = ({
@@ -62,7 +61,7 @@ const ErrorPage = ({
   children = <GoToDashboardButton />,
   history,
   location,
-  user
+  user,
 }: ErrorPageProps) => {
   const [ timer, setTimer ] = useState<number>(retryDelayInSeconds);
 
@@ -80,6 +79,7 @@ const ErrorPage = ({
     }
 
     const alreadyInHomePage = [ PROTECTED, HOME ].includes(location.pathname);
+
     if (alreadyInHomePage) {
       window.location.reload();
     } else {

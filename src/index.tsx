@@ -1,13 +1,19 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import store, { persistor, history } from './store'
-import AppProvider from 'containers/AppProvider'
-import './index.css'
-import App from './App'
-import * as serviceWorker from './serviceWorker'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import AppProvider from 'containers/AppProvider';
+import store, { persistor, history } from './store';
+import './index.css';
+import App from './App';
+import * as serviceWorker from './serviceWorker';
+import { light } from './theme';
 
 ReactDOM.render(
-  <AppProvider store={store} persistor={persistor} history={history}>
+  <AppProvider
+    store={store}
+    persistor={persistor}
+    history={history}
+    theme={light}
+  >
     <App />
   </AppProvider>,
   document.getElementById('root')

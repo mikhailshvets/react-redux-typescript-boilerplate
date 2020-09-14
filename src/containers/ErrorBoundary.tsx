@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTheme } from '@material-ui/styles';
 import ErrorPage from 'pages/ErrorPage';
-import window from 'global';
 import Button from '@material-ui/core/Button';
 import { Theme } from '@material-ui/core';
 
@@ -18,14 +17,17 @@ const ReloadButton = () => (
   </Button>
 );
 
-interface IState {
-  hasError: boolean
+interface State {
+  hasError: boolean;
 }
 
-class ErrorBoundary extends React.Component {
+class ErrorBoundary extends React.Component<any, State> {
   static getDerivedStateFromError = () => ({ hasError: true });
 
-  state: IState = { hasError: false };
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
 
   componentDidCatch(error: any, info: any) {
     console.error(error, info);
@@ -46,6 +48,6 @@ class ErrorBoundary extends React.Component {
       </ErrorPage>
     );
   }
-};
+}
 
 export default ErrorBoundary;

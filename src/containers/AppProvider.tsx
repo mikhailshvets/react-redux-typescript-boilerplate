@@ -1,18 +1,27 @@
 import React from 'react';
 import { ConnectedRouter } from 'connected-react-router';
-import { PersistGate } from 'redux-persist/lib/integration/react';
+import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
-import MuiThemeProvider, { ThemeProviderProps } from '@material-ui/styles/ThemeProvider';
-import * as appTheme from 'theme';
-import { History } from 'history';
+import MuiThemeProvider, {
+  ThemeProviderProps,
+} from '@material-ui/styles/ThemeProvider';
+import { History, LocationState } from 'history';
+import reduxStore from 'store';
+import { Persistor } from 'redux-persist';
 
 export interface AppProviderProps extends ThemeProviderProps {
-  store: any,
-  persistor: any,
-  history: History<any>,
+  store: typeof reduxStore;
+  persistor: Persistor;
+  history: History<LocationState>;
 }
 
-const AppProvider = ({ children, theme, store, persistor, history }: AppProviderProps) => (
+const AppProvider: React.FC<AppProviderProps> = ({
+  children,
+  theme,
+  store,
+  persistor,
+  history,
+}) => (
   <MuiThemeProvider theme={theme}>
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>
@@ -21,9 +30,5 @@ const AppProvider = ({ children, theme, store, persistor, history }: AppProvider
     </Provider>
   </MuiThemeProvider>
 );
-
-AppProvider.defaultProps = {
-  theme: appTheme.light
-};
 
 export default AppProvider;
