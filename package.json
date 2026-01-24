@@ -11,7 +11,7 @@
     "eslint-config-airbnb-typescript-prettier": "^3.1.0",
     "formik": "^1.5.8",
     "history": "^4.9.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.23",
     "prettier": "^2.1.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
